@@ -1,6 +1,5 @@
 # Notesgrip
 
-hogehoe
 
 TODO: Write a gem description
 
