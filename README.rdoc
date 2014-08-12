@@ -1,0 +1,300 @@
+= Hex Struct
+* ((<はじめに|URL:#sec_1>))
+* ((<HexStructの使い方|URL:#sec_2>))
+* ((<ダウンロード|URL:#sec_3>))
+* ((<HexStructの解説|URL:#sec_4>))
+* ((<HexStructのメソッド|URL:#sec_5>))
+* ((<ライセンス|URL:#sec_6>))
+
+((:<a id=sec_1 />:))
+== はじめに
+仕事柄、バイナリデータを処理するツールを作ることが多い。
+バイナリデータはなんらかのフォーマットを持っている。例えば、こんな感じで。
+  Offset | 説明
+  0      | Operation Code(2 Byte)
+  2      | Length(1 Byte)
+  3      | Data(0～255Byte)
+Rubyでバイナリデータのフォーマットを簡潔に記述し、名前でバイナリデータの各要素にアクセスできないかと
+思って作ったのが、ここで紹介するHexStructライブラリだ。
+
+=== るびまでの添削
+HexStruct Ver1.0は2004年9月ごろに完成し、ここでひっそりと公開していた。
+HexStructの作りに、何かしっくりこない部分があると感じていたのだが、どう直していいのかわからず、そのまま使っていた。
+
+「るびま 0010号」から、「あなたの Ruby コードを添削します」という連載が始まった。その中で添削してほしいRubyコードを
+募集していたので、さっそく募集したところ、運良く採用され、添削してもらった(((<※1|URL:http://jp.rubyist.net/magazine/?0011-CodeReview>)))。
+
+添削の結果、全部作り直されてしまったけど(笑)、そこで紹介されていたテクニックはとても参考になるものばかりだったので、
+さっそく自分のコードに取り込んでみた。それが、ここで紹介するHexStruct Ver1.10だ。
+
+
+((:<a id=sec_2 />:))
+== HexStructの使い方
+HexStructはこんなふうに使う。
+
+=== 構造定義
+バイナリフォーマット毎にHexStructのサブクラスを作り、define_structというクラスメソッドで構造定義を行う。
+構造は、要素のメンバ名とバイト長の配列で表現する。
+
+以下の例だと、FrameHeaderというクラスを作り、from_addとto_addというフィールドは3バイト、lenフィールドは2バイト
+という構造を定義している。
+  class FrameHeader < HexStruct
+    define_struct [
+      [:from_add, 3],
+      [:to_add,   3],
+      [:len,      2],
+    ]
+  end
+
+バイナリデータから、FrameHeaderの8バイト分をHEX文字列に変換し、その文字列を引数にしてFrameHeaderオブジェクトを
+生成すれば、フィールド毎に分割してくれる。
+  frame_header_str = "0001030002010005"  # HEX表記の文字列
+  frame_header = FrameHeader.new(frame_header_str)
+  
+  p frame_header # -> [from_add:000103, to_add:000201, len:0005]
+
+引数を省略すると、"00"で埋めたFrameHeaderを作ってくれる。"FF"で埋めたFrameHeaderが欲しければ、"FF" * FrameHeader.size
+を引数で与えればいい。
+  frame_header = FrameHeader.new
+  p frame_header # -> [from_add:000000, to_add:000000, len:0000]
+  
+  frame_header = FrameHeader.new("FF" * FrameHeader.size)
+  p frame_header # -> [from_add:FFFFFF, to_add:FFFFFF, len:FFFF]
+
+=== 可変長フィールドの定義
+可変長フィールドを含む構造を定義する場合、バイト長にnilを指定する。以下のケースだと、dataフィールドが可変長フィールドになる。
+  class Frame < HexStruct
+    define_struct [
+      [:header, 8],
+      [:data, nil],
+    ]
+  end
+
+可変長フィールドを含む場合、newで渡すHEX文字列の内、固定長領域の残りがすべて可変長フィールドに割り当てられる。
+このため、可変長フィールドは一番後ろに1つだけ配置する必要がある。
+  frame = Frame.new("00010300020100051122334455")
+  p frame # => [header:0001030002010005, data:1122334455]
+
+=== フィールドの参照
+フィールド名と同じ名前のメソッド呼び出しで、各フィールドの値にアクセスできる。
+  class FrameHeader < HexStruct
+    define_struct [
+      [:from_add, 3],
+      [:to_add,   3],
+      [:len,      2],
+    ]
+  end
+  
+  frame_header = FrameHeader.new("0001030002010005")
+  p frame_header.from_add  # => "000103"
+  
+["len"]はlenフィールドそのものを返す。フィールドの値はvalueメソッドで得られる。
+  frame_header = FrameHeader.new("0001030002010005")
+  field = frame_header["len"]
+  p field.value # => "0005"
+
+フィールドが返す値は、デフォルトではHEX表記の文字列である。フィールドにある形式で値を代入した場合は、代入した形式で値が返される
+(数値での代入だけ例外。数値で代入した場合は、HEX表記の文字列が返る)。
+
+=== フィールドへの代入
+フィールドには、HEX表記文字列、整数、HexStructのインスタンス、HexStructのArrayを代入することができる。
+整数を代入すると、フィールドのサイズに応じたHEX表記文字列に変換してくれる。
+
+固定長フィールドに代入する場合、フィールドサイズと違うデータ長の値を代入すると、例外が発生する。
+可変長フィールドに代入する場合、フィールドのデータ長は、代入した値のデータ長になる。
+  
+  frame_header = FrameHeader.new
+  frame_header.from_add = "000103"
+  frame_header.to_add   = "000201"
+  frame_header.len = 5
+  p frame_header # => [from_add:000103, to_add:000201, len:0005]
+  
+固定長フィールドに別のHexStructのオブジェクトを代入することも可能。この場合、フィールドの値を参照すると、代入したHexStruct
+オブジェクト得られる。
+  frame = Frame.new
+  frame.header = FrameHeader.new("0001030002010005")
+  frame.data = "1122334455"
+  p frame  # => [header:[from_add:000103, to_add:000201, len:0005], data:1122334455]
+  
+可変長フィールドに、HexStructの配列を代入すれば、繰り返し構造も表現できる。この場合、フィールドの値を参照すると、代入したHexStruct
+の配列が得られる。
+  class RepeatData < HexStruct
+    define_struct [
+      [:index,   1],
+      [:data_ID, 2]
+    ]
+  end
+  
+  frame = Frame.new
+  frame.header = FrameHeader.new("0001030002010000")
+  frame.data = [
+    RepeatData.new("001000"), 
+    RepeatData.new("011001"),
+    RepeatData.new("021022"),
+  ]
+  frame.header.len = frame["data"].size  # dataフィールドのバイト数をセット
+  p frame  # => [header:[from_add:000103, to_add:000201, len:0009], 
+           #      data:[[index:00, data_ID:1000], [index:01, data_ID:1001], [index:02, data_ID:1022]]]
+
+
+  
+((:<a id=sec_3 />:))
+== ダウンロード
+((<HexStruct Ver1.10|URL:/download/HexStruct.1.1.zip>))
+
+((:<a id=sec_4 />:))
+== HexStructの解説
+HexStructライブラリの解説です。→((<Go|URL:./hexstruct_note.html>))
+
+((:<a id=sec_5 />:))
+== HexStructのメソッド
+=== 構造定義
+構造定義するには、HexStructのサブクラスを作り、define_structに[フィールド名, データ長]の配列の配列を渡す((-define_structはクラス
+メソッドになっている。引数に構造定義配列を渡すことで、アクセサメソッドを定義している。-))。
+可変長フィールドの場合、データ長にnilを指定する。可変長フィールドは構造定義の最後に1つだけ定義すること。
+  class Frame < HexStruct
+    define_struct [
+      [:from_add, 3],
+      [:to_add,   3],
+      [:len,      2],
+      [:data,   nil],  # 可変長フィールド
+    ]
+  end
+フィールド名は、アクセサメソッドとして定義されるので、メソッドとして使えない名前はつけないこと。また、HexStructのインスタンス
+メソッド名と同じ名前のフィールド名はつけないように。
+
+=== クラスメソッド
+:HexStruct.new([hex_str])
+  "000102"のようなHex文字列を渡すと、このHex文字列を内包するHexStructオブジェクトを返す。
+  引数を省略すると、構造定義で決めたサイズ分、"00"で埋めたデータを内包するオブジェクトを返す。
+  可変長フィールドがある場合は、固定長フィールドにだけデータをセットする。
+    class Frame < HexStruct
+      define_struct [
+        [:code,  2],
+        [:len,   1],
+        [:data, nil],
+      ]
+    end
+    
+    frame = Frame.new
+    p frame  # -> [code:0000, len:00, data:]
+  
+  
+:HexStruct.size
+  定義されたフォーマットのバイトサイズを返す。ただし固定長部のみ。
+    class Frame < HexStruct
+      define_struct [
+        [:code,  2],
+        [:len,   1],
+        [:data, nil],
+      ]
+    end
+    
+    p Frame.size  # -> 3
+    
+=== インスタンスメソッド
+:byte_size
+  内包するデータの実データ長を返す(単位はバイト)。
+  
+:フィールド名
+  構造定義でつけたフィールド名と同じ名前のアクセサメソッドが定義されている。フィールドの値を返す。
+  デフォルトでは、HEX表記の文字列を返すが、フィールドに値を代入した場合、代入した値がそのまま返る。
+:フィールド名=
+  フィールドに値を代入する。
+  代入できるのは、HEX表記の文字列、整数、HexStructオブジェクト、HexStructの配列である。整数を代入すると、内部で
+  HEX表記の文字列に変換される。
+  
+  * 別のHexStructオブジェクトを代入すると、フィールド内部にも構造を持たせることができる
+   class Frame < HexStruct
+     define_struct [
+       [:code,  2],
+       [:len,   1],
+       [:data, nil],
+     ]
+   end
+   
+   class DataFormat < HexStruct
+     define_struct [
+       [:index_code, 1],
+       [:name_str, 8],
+     ]
+   end
+   
+   frame = Frame.new("0011FF")
+   frame.data = DataFormat.new("014141414141414141")
+   frame.len = frame["data"].size
+   
+   p frame # -> [code:0011, len:09, data:[index_code:01, name_str:4141414141414141]]
+  
+  * [HexStruct, HexStruct,...]のようにHexStructのサブクラスのオブジェクトの配列を代入すると、構造の繰り返しを指定できる
+   class Frame < HexStruct
+     define_struct [
+       [:code,  2],
+       [:len,   1],
+       [:data, nil],
+     ]
+   end
+   
+   class DataFormat < HexStruct
+     define_struct [
+       [:index_code, 1],
+       [:name_str, 3],
+     ]
+   end
+   
+   frame = Frame.new("0011FF")
+   frame.data = [ DataFormat.new("01414141"), DataFormat.new("02505050")] 
+   frame.len = frame["data"].size
+   
+   p frame.data[1].name_str # -> "505050"
+   
+:[フィールド名]
+  フィールドそのものを返す。ItemFieldオブジェクトを返す。
+  ItemFieldクラスのメソッドを使うことで値の代入、参照、データ長を求めることができる。
+  
+:byte_size
+:size
+  内包するデータの総バイト長を返す。
+
+: ==
+他のHexStructオブジェクトと内容が等しいときはtrue、等しくないときはfalseを返す。
+
+:to_a
+  構造定義に基づいて、Hexデータを各要素毎に分割したArrayを返す。
+  * "0100030022500122" => ["01", "0003", "0022", "500122"]
+  
+  ある要素に別のHexStructのサブクラスがセットされているときは、
+  その要素がまた要素ごとに分割されたArrayになる。
+  
+:to_s
+  内包するデータを表すHEX表記の文字列を返す。
+
+=== ItemFieldのメソッド
+:size
+:byte_size
+  そのフィールドのバイト長を返す。
+:value
+  そのフィールドの値を返す。
+:value = 
+  そのフィールドに値を代入する。
+  
+  HEX表記文字列、数値、HexStructオブジェクト、HexStructオブジェクトの配列が代入可能。
+  
+((:<a id=sec_6 />:))
+== ライセンス
+ライセンスはRubyのライセンスに従います。
+
+Copyright (C) 2004,2005 Oka Yasushi <yac@tech-notes.dyndns.org>
+
+You may redistribute it and/or modify it under the same license terms as Ruby. 
+
+== 謝辞
+HexStruct Ver2.0は((<るびま 0011号|URL:http://jp.rubyist.net/magazine/?0011>)):
+「((<あなたの Ruby コードを添削します 【第 2 回】 HexStruct.rb|URL:http://jp.rubyist.net/magazine/?0011-CodeReview#l3>))」における
+青木峰郎さんの添削結果を参考に作成したものです。
+
+記事中で紹介されているテクニックは、大変勉強になりました。ありがとうございました。
+
+((:<hr />:))
+((<戻る|URL:../index.html>))
+  
