@@ -5,7 +5,7 @@
 # You may redistribute it and/or modify it under the same license terms as Ruby.
 require 'win32ole'
 require 'singleton'
-require './lib/NotesSession'
+require 'notesgrip/NotesSession'
 
 class WIN32OLE
   @const_defined = Hash.new 
