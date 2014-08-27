@@ -15,7 +15,23 @@ Notesgrip is Ruby library to handle all Notes classes.
   }
 
 == Documentation
-Creating now.
+=== Notesgrip::NotesSession class
+Wrap NotesSession class to use all properties and methods of NotesSession class.
++Example
+  ns = NotesGrip::NotesSession.new
+  p ns.NotesVersion # -> "Release 9.0|March 08, 2013             "
+  db = ns.getDatabase("servername", "dbname.nsf")
+
++ Additional Methods
+++ database(server, dbfilename, createonfail=false)
+Alias of GetDatabse().
+
+++ each_database(server) {|database| block}
+Calls the given block for each database on server.
+  ns = NotesGrip::NotesSession.new
+  ns.each_database("myserver") {|db|
+    p db
+  }
 
 == Author
 notesgrip@tech-notes.dyndns.org
