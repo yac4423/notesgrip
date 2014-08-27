@@ -15,8 +15,15 @@ Notesgrip is Ruby library to handle all Notes classes.
   }
 
 == Documentation
+=== Notesgrip::Notes_Wrapper
+Base class of all Notesgrip classes. 
+This class wraps a various Notes objects.
+==== Methods
+[raw]
+  Return raw Notes object which is wrapped by Notesgrip object.
+
 === Notesgrip::NotesSession class
-Wrap NotesSession class to use all properties and methods of NotesSession class.
+Wrap NotesSession object to use all properties and methods of NotesSession class.
   ns = NotesGrip::NotesSession.new
   p ns.NotesVersion # -> "Release 9.0|March 08, 2013             "
   db = ns.getDatabase("servername", "dbname.nsf")
@@ -30,6 +37,53 @@ Wrap NotesSession class to use all properties and methods of NotesSession class.
     ns.each_database("myserver") {|db|
       p db
     }
+
+=== Notesgrip:NotesDatabase class
+Wrap NotesDatabase object.
+  ns = NotesGrip::NotesSession.new
+  db = ns.getDatabase("servername", "dbname.nsf")
+  puts "Title:#{db.Title}, Size:#{db.Size}" # Title:tech's Directory, Size:23330816.0
+  
+==== Additional Methods
+[name()]
+  Alias of Title().
+[open?()]
+  Alias of IsOpen().
+[each_document {|doc| block}]
+  Calls the given block for each document in database.
+    db.each_document {|doc|
+      p doc
+    }
+
+=== Notesgrip:NotesView class
+Wrap NotesView object.
+  ns = NotesGrip::NotesSession.new
+  db = ns.getDatabase("servername", "dbname.nsf")
+  view = db.view("All")
+  p view.Count
+==== Additional Methods
+[each_document {|doc| block}]
+  Calls the given block for each document in the view.
+    view.each_document {|doc|
+      p doc
+    }
+[[index]]
+  Return the document at index.
+=== Notesgrip:NotesDocumentCollection class
+Wrap NotesDocumentCollection object.
+  ns = NotesGrip::NotesSession.new
+  db = ns.getDatabase("servername", "dbname.nsf")
+  view = db.view("ByDate")
+  docList = view.GetAllDocumentsByKey("2014/04/20", true)
+  p docList.size # count of documents in NotesDocumentCollection
+==== Additional Methods
+[each_document {|doc| block}]
+  Calls the given block for each document in the view.
+    view.each_document {|doc|
+      p doc
+    }
+[[index]]
+  Return the document at index.
 
 == Author
 notesgrip@tech-notes.dyndns.org
