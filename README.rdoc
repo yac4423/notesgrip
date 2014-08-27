@@ -23,10 +23,10 @@ Wrap NotesSession class to use all properties and methods of NotesSession class.
   db = ns.getDatabase("servername", "dbname.nsf")
 
 ==== Additional Methods
-* database(server, dbfilename, createonfail=false)
+===== database(server, dbfilename, createonfail=false)
 Alias of GetDatabse().
 
-==== each_database(server) {|database| block}
+===== each_database(server) {|database| block}
 Calls the given block for each database on server.
   ns = NotesGrip::NotesSession.new
   ns.each_database("myserver") {|db|
