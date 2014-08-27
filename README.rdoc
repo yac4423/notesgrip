@@ -45,6 +45,8 @@ Wrap NotesDatabase object.
   puts "Title:#{db.Title}, Size:#{db.Size}" # Title:tech's Directory, Size:23330816.0
   
 ==== Additional Methods
+[CreateDocument(formName=nil)]
+  Create new NotesDocument and set form name. Return Notesgrip::NotesDocument.
 [name()]
   Alias of Title().
 [open?()]
@@ -64,11 +66,13 @@ Wrap NotesView object.
 ==== Additional Methods
 [each_document {|doc| block}]
   Calls the given block for each document in the view.
+    view = db.view("All")
     view.each_document {|doc|
       p doc
     }
 [[index]]
   Return the document at index.
+
 === Notesgrip:NotesDocumentCollection class
 Wrap NotesDocumentCollection object.
   ns = NotesGrip::NotesSession.new
@@ -79,12 +83,49 @@ Wrap NotesDocumentCollection object.
 ==== Additional Methods
 [each_document {|doc| block}]
   Calls the given block for each document in the view.
-    view.each_document {|doc|
+    docList = view.GetAllDocumentsByKey("2014/04/20", true)
+    docList.each_document {|doc|
       p doc
     }
 [[index]]
   Return the document at index.
 
+=== Notesgrip:NotesDocument class
+Wrap NotesDocument object.
+  ns = NotesGrip::NotesSession.new
+  db = ns.getDatabase("servername", "dbname.nsf")
+  doc = db.CreateDocument("main")
+  doc['subject'].text = "Sample-001"
+  doc.save
+==== Additional Methods
+[unid]
+  Alias of UniversalID().
+[[itemname]]
+  Return Notesgrip::NotesItem object which is identified by itemname in the document.
+[[itemname] = other_item]
+  Copy other NotesItem with given item name.
+[each_item{|item| block}]
+  Calls the given block for each NotesItem in my document.
+
+=== Notesgrip:NotesItem class
+Wrap NotesItem object.
+  ns = NotesGrip::NotesSession.new
+  db = ns.getDatabase("servername", "dbname.nsf")
+  db.each_document {|doc|
+    item = doc["subject"]
+    p item.text
+  }
+==== Additional Methods
+[Values=item_value, text=item_value]
+  Copy item_value into my field. You can set Array into the field.
+[each_value {|value| block}]
+  Calls the given block for each item value in the field.
+[richitem_attached?]
+  Return true if Embeded oject in the field.
+[to_s]
+  Return text string in the field.
+
+  
 == Author
 notesgrip@tech-notes.dyndns.org
 
