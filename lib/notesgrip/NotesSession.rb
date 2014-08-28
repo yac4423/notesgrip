@@ -1,53 +1,8 @@
 module Notesgrip
-  NOTES_DATABASE = 1247
-  TEMPLATE = 1248
-  REPLICA_CANDIDATE = 1245
-  TEMPLATE_CANDIDATE = 1246 
-  class Notes_Wrapper
-    def initialize(raw_object)
-      if raw_object.methods.include?("raw")
-        @raw_object = raw_object.raw
-      else
-        @raw_object = raw_object
-      end
-    end
-    
-    def raw
-      @raw_object
-    end
-    
-    def inspect()
-      self.class
-    end
-    
-    private
-    
-    def method_missing(m_id, *params)
-      missing_method_name = m_id.to_s.downcase
-      methods.each {|method|
-        if method.to_s.downcase == missing_method_name
-          return send(method, *params)
-        end
-      }
-      # Undefined Method is throwed to raw_object
-      begin
-        @raw_object.send(m_id, *params)
-      rescue
-        raise $!,$!.message, caller
-      end
-    end
-    
-    def toRaw(target_obj)
-      target_obj.respond_to?("raw") ? target_obj.raw : target_obj
-    end
-  end
-end
-
-module Notesgrip
   # ====================================================
   # ================= NotesSession Class ===============
   # ====================================================
-  class NotesSession < Notes_Wrapper
+  class NotesSession < GripWrapper
     @@ns = nil
     
     def initialize()
@@ -55,7 +10,6 @@ module Notesgrip
         @raw_object = @ns
       else
         @raw_object = WIN32OLE.new('Notes.NotesSession')
-        WIN32OLE.my_const_load(@raw_object, Notesgrip)
       end
     end
     
@@ -242,6 +196,10 @@ module Notesgrip
     end
     
     # ----Additional Methods --------
+    NOTES_DATABASE = 1247
+    TEMPLATE = 1248
+    REPLICA_CANDIDATE = 1245
+    TEMPLATE_CANDIDATE = 1246 
     def each_database(serverName = "")
       db_directory = @raw_object.GetDbDirectory( serverName )
       raw_db = db_directory.GetFirstDatabase(NOTES_DATABASE)
@@ -253,22 +211,97 @@ module Notesgrip
     end
     
   end
+  
+  # ====================================================
+  # ================= NotesDbDirectory Class ===============
+  # ====================================================
+  class NotesDbDirectory < GripWrapper
+    def nitialize(raw_doc)
+      super(raw_doc)
+    end
+    
+    def CreateDatabase(dbfile)
+      servername = @raw_object.Name
+      raw_db = NotesSession.new.GetDatabase(servername, dbfile)
+      unless raw_db.IsOpen
+        raw_db.Create(servername, dbfile, true)
+      end
+      NotesDatabase.new(raw_db)
+    end
+    
+    def GetFirstDatabase(fileType=NOTES_DATABASE)
+      raw_db = @raw_object.GetFirstDatabase(fileType)
+      NotesDatabase.new(raw_db)
+    end
+    
+    
+    def GetNextDatabase()
+      raw_db = @raw_object.GetNextDatabase()
+      return nil unless raw_db
+      NotesDatabase.new(raw_db)
+    end
+    
+    def each_database(fileType=NOTES_DATABASE)
+      db = GetFirstDatabase(fileType)
+      while db
+        yield db
+        db = GetNextDatabase()
+      end
+    end
+  end
+  
+  # ====================================================
+  # ================= NotesDateTime Class ===============
+  # ====================================================
+  class NotesDateTime < GripWrapper
+  end
+  
+  # ====================================================
+  # ================= NotesLog Class ===============
+  # ====================================================
+  class NotesLog < GripWrapper
+  end
+  
+  # ====================================================
+  # ================= NotesName Class ===============
+  # ====================================================
+  class NotesName < GripWrapper
+  end
+  
+  # ====================================================
+  # ================= NotesStream Class ===============
+  # ====================================================
+  class NotesStream < GripWrapper
+  end
+  
+  # ====================================================
+  # ================= NotesColorObject Class ===============
+  # ====================================================
+  class NotesColorObject < GripWrapper
+  end
+  
+  # ====================================================
+  # ======== NotesAdministrationProcess Class ===============
+  # ====================================================
+  class NotesAdministrationProcess < GripWrapper
+  end
+  
+  # ====================================================
+  # ======== NotesInternational Class ===============
+  # ====================================================
+  class NotesInternational < GripWrapper
+  end
+  
+  # ====================================================
+  # ======== NotesNewsLetter Class ===============
+  # ====================================================
+  class NotesNewsLetter < GripWrapper
+  end
+  
+  # ====================================================
+  # ======== NotesRegistration Class ===============
+  # ====================================================
+  class NotesRegistration < GripWrapper
+  end
 end
 
-if $0 == __FILE__
-  @ns = Notesgrip::NotesSession.new
-  @db = @ns.database("", "test_db.nsf")
-    50.times {|index|
-      new_doc = @db.create_doc("MainForm")
-      new_doc["TextField"].text = sprintf("%02d", index)
-      new_doc["value_field"].text = index
-      new_doc["time_field"].text = Time.now
-      new_doc.save
-    }
-    view = @db.view("keys")
-    doc = view[10]
-    #doc = view.raw.GetDocumentByKey(["15", 15], false)
-    doc = view.get_doc_by_key("15", 15)
-    p doc
-
-end

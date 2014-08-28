@@ -3,10 +3,10 @@ Notesgrip is Ruby library to handle all Notes classes.
 * Windows Only
 * Necessary Notes Clinet(all version OK. R4.6-R9)
 
-== Installation
+= Installation
   # gem install notesgrip
 
-== Usage
+= Usage
   require 'notesgrip'
   ns = Notesgrip::NotesSession.new
   db = ns.database("myserver", "mydb.nsf")
@@ -14,21 +14,21 @@ Notesgrip is Ruby library to handle all Notes classes.
     p doc
   }
 
-== Documentation
-=== Notesgrip::Notes_Wrapper
+= Documentation
+== Notesgrip::Notes_Wrapper
 Base class of all Notesgrip classes. 
 This class wraps a various Notes objects.
-==== Methods
+=== Methods
 [raw]
   Return raw Notes object which is wrapped by Notesgrip object.
 
-=== Notesgrip::NotesSession class
+== Notesgrip::NotesSession class
 Wrap NotesSession object to use all properties and methods of NotesSession class.
   ns = NotesGrip::NotesSession.new
   p ns.NotesVersion # -> "Release 9.0|March 08, 2013             "
   db = ns.getDatabase("servername", "dbname.nsf")
 
-==== Additional Methods
+=== Additional Methods
 [database(server, dbfilename, createonfail=false)]
   Alias of GetDatabse().
 [each_database(server) {|database| block}]
@@ -38,13 +38,13 @@ Wrap NotesSession object to use all properties and methods of NotesSession class
       p db
     }
 
-=== Notesgrip:NotesDatabase class
+== Notesgrip:NotesDatabase class
 Wrap NotesDatabase object.
   ns = NotesGrip::NotesSession.new
   db = ns.getDatabase("servername", "dbname.nsf")
   puts "Title:#{db.Title}, Size:#{db.Size}" # Title:tech's Directory, Size:23330816.0
   
-==== Additional Methods
+=== Additional Methods
 [CreateDocument(formName=nil)]
   Create new NotesDocument and set form name. Return Notesgrip::NotesDocument.
 [name()]
@@ -57,13 +57,13 @@ Wrap NotesDatabase object.
       p doc
     }
 
-=== Notesgrip:NotesView class
+== Notesgrip:NotesView class
 Wrap NotesView object.
   ns = NotesGrip::NotesSession.new
   db = ns.getDatabase("servername", "dbname.nsf")
   view = db.view("All")
   p view.Count
-==== Additional Methods
+=== Additional Methods
 [each_document {|doc| block}]
   Calls the given block for each document in the view.
     view = db.view("All")
@@ -80,7 +80,7 @@ Wrap NotesDocumentCollection object.
   view = db.view("ByDate")
   docList = view.GetAllDocumentsByKey("2014/04/20", true)
   p docList.size # count of documents in NotesDocumentCollection
-==== Additional Methods
+=== Additional Methods
 [each_document {|doc| block}]
   Calls the given block for each document in the view.
     docList = view.GetAllDocumentsByKey("2014/04/20", true)
@@ -90,24 +90,24 @@ Wrap NotesDocumentCollection object.
 [[index]]
   Return the document at index.
 
-=== Notesgrip:NotesDocument class
+== Notesgrip:NotesDocument class
 Wrap NotesDocument object.
   ns = NotesGrip::NotesSession.new
   db = ns.getDatabase("servername", "dbname.nsf")
   doc = db.CreateDocument("main")
   doc['subject'].text = "Sample-001"
   doc.save
-==== Additional Methods
+=== Additional Methods
 [unid]
   Alias of UniversalID().
 [[itemname]]
   Return Notesgrip::NotesItem object which is identified by itemname in the document.
-[[itemname] = other_item]
+[[itemname]=other_item]
   Copy other NotesItem with given item name.
 [each_item{|item| block}]
   Calls the given block for each NotesItem in my document.
 
-=== Notesgrip:NotesItem class
+== Notesgrip:NotesItem class
 Wrap NotesItem object.
   ns = NotesGrip::NotesSession.new
   db = ns.getDatabase("servername", "dbname.nsf")
@@ -115,7 +115,7 @@ Wrap NotesItem object.
     item = doc["subject"]
     p item.text
   }
-==== Additional Methods
+===Additional Methods
 [Values=item_value, text=item_value]
   Copy item_value into my field. You can set Array into the field.
 [each_value {|value| block}]
@@ -126,12 +126,10 @@ Wrap NotesItem object.
   Return text string in the field.
 
   
-== Author
+= Author
 notesgrip@tech-notes.dyndns.org
 
 
-== License
+
+= License
 MIT
-
-
-  
