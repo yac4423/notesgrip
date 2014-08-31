@@ -25,6 +25,7 @@ module Notesgrip
     
     def Agents
       agent_arr = @raw_object.Agents
+      return [] unless agent_arr  # Case of No Agent in database
       ret_list = []
       agent_arr.each {|raw_agent|
         ret_list.push NotesAgent.new(raw_agent)
@@ -167,17 +168,18 @@ module Notesgrip
     FT_FILESYSTEM = 4096 # includes files that are not Domino databases.
     FT_STEMS = 512       # uses stem words as the basis of the search.
     FT_THESAURUS = 1024  # uses thesaurus synonyms.
-    def FTDomainSearch( query, maxDocs, sortoptions=FT_SCORES, otheroptions=0, start=0, count=1, entryform="" )
-      raw_doc = @raw_object.FTDomainSearch( query, maxDocs, sortoptions, otheroptions, start, count, entryform )
-      raw_doc ? NotesDocument.new(raw_doc) : nil
+    def FTDomainSearch( query, maxDocs=0, sortoptions=FT_SCORES, otheroptions=0, start=0, count=1, entryform="" )
+      #raw_doc = @raw_object.FTDomainSearch( query, maxDocs, sortoptions, otheroptions, start, count, entryform )
+      #raw_doc ? NotesDocument.new(raw_doc) : nil
+      raise "FTDomainSearch() is not work."
     end
     
-    def FTSearch( query, maxdocs, sortoptions=FT_SCORES, otheroptions=0 )
+    def FTSearch( query, maxdocs=0, sortoptions=FT_SCORES, otheroptions=0 )
       raw_docCollection = @raw_object.FTSearch( query, maxdocs, sortoptions, otheroptions)
       NotesDocumentCollection.new(raw_docCollection)
     end
     
-    def FTSearchRange( query, maxdocs, sortoptions=FT_SCORES, otheroptions=0, start=0 )
+    def FTSearchRange( query, maxdocs=0, sortoptions=FT_SCORES, otheroptions=0, start=0 )
       raw_docCollection = @raw_object.FTSearchRange( query, maxdocs, sortoptions, otheroptions, start)
       NotesDocumentCollection.new(raw_docCollection)
     end
@@ -192,8 +194,8 @@ module Notesgrip
       NotesDocumentCollection.new(raw_docCollection)
     end
     
-    def GetAllReadDocuments(username=nil)
-      raw_docCollection = @raw_object.GetAllReadDocuments(username)
+    def GetAllUnreadDocuments( username=nil )
+      raw_docCollection = @raw_object.GetAllUnreadDocuments(username)
       NotesDocumentCollection.new(raw_docCollection)
     end
     
@@ -208,8 +210,9 @@ module Notesgrip
     end
     
     def GetDocumentByURL( url, reload=0, urllist=0, charset="", webusername="", webpassword=nil, proxywebusername=nil, proxywebpassword=nil, returnimmediately=false )
-      raw_doc = @raw_object.GetDocumentByURL( url, reload, urllist, charset, webusername, webpassword, proxywebusername, proxywebpassword, returnimmediately )
-      raw_doc ? NotesDocument.new(raw_doc) : nil
+      #raw_doc = @raw_object.GetDocumentByURL( url, reload, urllist, charset, webusername, webpassword, proxywebusername, proxywebpassword, returnimmediately )
+      #raw_doc ? NotesDocument.new(raw_doc) : nil
+      raise "GetDocumentByURL() is not Work"
     end
     
     def GetForm( name )
@@ -229,8 +232,9 @@ module Notesgrip
     DBMOD_DOC_SHAREDFIELD = 1024
     DBMOD_DOC_VIEW = 8
     def GetModifiedDocuments( since=nil , noteClass=DBMOD_DOC_DATA )
-      raw_docCollection = @raw_object.GetModifiedDocuments( since, noteClass)
-      NotesDocumentCollection.new(raw_docCollection)
+      #raw_docCollection = @raw_object.GetModifiedDocuments( since, noteClass)
+      #NotesDocumentCollection.new(raw_docCollection)
+      raise "GetModifiedDocuments() is not work."
     end
     
     
@@ -255,8 +259,9 @@ module Notesgrip
     end
     
     def GetOutline( outlinename )
-      raw_outline = @raw_object.GetOutline( outlinename )
-      NotesOutline.new(raw_outline)
+      #raw_outline = @raw_object.GetOutline( outlinename )
+      #NotesOutline.new(raw_outline)
+      raise "GetOutline is not work."
     end
     
     def GetProfileDocCollection( profilename=nil )
@@ -275,12 +280,16 @@ module Notesgrip
     end
     alias view GetView
     
-    def Search( formula, notesDateTime, maxDocs )
-      raw_docCollection = @raw_object.Search( formula, notesDateTime, maxDocs )
-      NotesDocumentCollection.new(raw_docCollection)
+    def Search( formula, notesDateTime=nil, maxDocs=0 )
+      #raw_docCollection = @raw_object.Search( formula, notesDateTime, maxDocs )
+      #NotesDocumentCollection.new(raw_docCollection)
+      raise "Search() is not work."
     end
     
-    def UnprocessedFTSearch(query, maxdocs, sortoptions=nil, otheroptions=nil )
+    def UnprocessedFTSearch(query, maxdocs=0, sortoptions=nil, otheroptions=nil )
+      #raw_docCollection = @raw_object.UnprocessedFTSearch(query, maxdocs, sortoptions, otheroptions )
+      #NotesDocumentCollection.new(raw_docCollection)
+      raise "UnprocessedFTSearch() is not work."
     end
     
     # ---- Additional Methods ------
@@ -299,8 +308,34 @@ module Notesgrip
       }
     end
     
+    def each_view
+      view_collection = self.Views
+      view_collection.each {|view|
+        yield view
+      }
+    end
+    
+    def each_form
+      form_collection = self.Forms
+      form_collection.each {|form|
+        yield form
+      }
+    end
+    
+    def each_agent
+      self.Agents.each {|agent|
+        yield agent
+      }
+    end
+    
+    def each_profile
+      self.GetProfileDocCollection.each {|profileDoc|
+        yield profileDoc
+      }
+    end
+    
     def inspect
-      "<#{self.class}, Name:#{self.name}, FilePath:#{self.FilePath}>"
+      "<#{self.class}, Name:#{self.name.inspect}, FilePath:#{self.FilePath.inspect}>"
     end
   end
   
@@ -308,6 +343,7 @@ module Notesgrip
   # ================= NotesForm Class ===============
   # ====================================================
   class NotesForm < GripWrapper
+    # ------ Additional Methods -----
     def inspect
       "<#{self.class} Name:#{self.Name.inspect}>"
     end
@@ -317,6 +353,10 @@ module Notesgrip
   # ================= NotesAgent Class ===============
   # ====================================================
   class NotesAgent < GripWrapper
+    # ------ Additional Methods -----
+    def inspect
+      "<#{self.class} Name:#{self.Name.inspect}>"
+    end
   end
   
   # ====================================================
@@ -355,6 +395,7 @@ module Notesgrip
       @raw_object.RenameRole( oldName, newName )
     end
     
+    # ----- Additional Methods ----
     def each_entry
       raw_entry = @raw_object.GetFirstEntry
       while raw_entry
@@ -363,6 +404,7 @@ module Notesgrip
         raw_entry = next_entry
       end
     end
+    alias each each_entry
   end
   
   # ====================================================
@@ -387,6 +429,10 @@ module Notesgrip
     ACLTYPE_SERVER_GROUP = 5
     def UserType
       @raw_object.UserType
+    end
+    # ----- Additional Methods ----
+    def inspect
+      "<#{self.class} Name:#{self.Name}>"
     end
   end
   

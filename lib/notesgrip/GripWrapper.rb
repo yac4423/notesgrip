@@ -18,13 +18,16 @@ module Notesgrip
     
     private
     
+    OLE_METHODS = [:Type, :Initialize]
     def method_missing(m_id, *params)
-      missing_method_name = m_id.to_s.downcase
-      methods.each {|method|
-        if method.to_s.downcase == missing_method_name
-          return send(method, *params)
-        end
-      }
+      unless OLE_METHODS.include?(m_id)
+        missing_method_name = m_id.to_s.downcase
+        methods.each {|method|
+          if method.to_s.downcase == missing_method_name
+            return send(method, *params)
+          end
+        }
+      end
       # Undefined Method is throwed to raw_object
       begin
         @raw_object.send(m_id, *params)

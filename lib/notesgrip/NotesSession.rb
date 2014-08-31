@@ -27,6 +27,11 @@ module Notesgrip
       NotesInternational.new(raw_international)
     end
     
+    def CurrentDatabase
+      db = @raw_object.CurrentDatabase
+      db ? NotesDatabase.new(db) : nil
+    end
+    
     def SavedData
       raw_saveddb = @raw_object.SavedData
       raw_saveddb ? NotesDocument.new(raw_saveddb) : nil
@@ -125,9 +130,7 @@ module Notesgrip
     
     def GetDbDirectory(server_name)
       raw_db_directory = @raw_object.GetDbDirectory(server_name)
-      db_dir = NotesDbDirectory.new(raw_db_directory)
-      db_dir.parent = self
-      db_dir
+      NotesDbDirectory.new(raw_db_directory)
     end
     
     def GetDirectory()
@@ -254,6 +257,10 @@ module Notesgrip
   # ================= NotesDateTime Class ===============
   # ====================================================
   class NotesDateTime < GripWrapper
+    # ---- Additional Methods -----
+    def inspect
+      "<#{self.class}, #{self.LocalTime} #{self.TimeOnly}>"
+    end
   end
   
   # ====================================================
@@ -266,6 +273,9 @@ module Notesgrip
   # ================= NotesName Class ===============
   # ====================================================
   class NotesName < GripWrapper
+    def inspect
+      "<#{self.class}, #{self.Common}>"
+    end
   end
   
   # ====================================================

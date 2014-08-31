@@ -8,6 +8,7 @@ module Notesgrip
     EMBED_OBJECTLINK = 1452
     def EmbeddedObjects
       obj_list = []
+      return obj_list unless @raw_object.EmbeddedObjects
       @raw_object.EmbeddedObjects.each {|rawEmbObj|
         obj_list.push NotesEmbeddedObject.new(rawEmbObj)
       }

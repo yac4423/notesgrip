@@ -155,10 +155,8 @@ module Notesgrip
       }
     end
     
-    def richitem_attached?
-      return false if @raw_object.Type == TEXT_TYP
-      return true if @raw_object.EmbeddedObjects != nil
-      return false
+    def EmbeddedObjects
+      []
     end
     
     def to_s

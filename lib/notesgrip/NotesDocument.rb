@@ -179,7 +179,7 @@ module Notesgrip
     end
     
     def inspect
-      "<#{self.class}, Form:#{self['Form']}>"
+      "<#{self.class}, Form:#{self['Form'].text.inspect}>"
     end
     
   end
@@ -249,6 +249,10 @@ module Notesgrip
       @raw_object.Subtract(raw_obj)
     end
     
+    # ---- Additional Methods ------
+    def inspect
+      "<#{self.class}, Count:#{self.Count}>"
+    end
   end
 
 end
