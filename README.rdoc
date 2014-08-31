@@ -56,7 +56,27 @@ Wrap NotesDatabase object.
     db.each_document {|doc|
       p doc
     }
-
+[each_view {|view| block}]
+  Calls the given block for each view in database.
+    db.each_view {|view|
+      p view
+    }
+[each_form {|form| block}]
+  Calls the given block for each form in database.
+    db.each_form {|form|
+      p form
+    }
+[each_agent {|agent| agent}]
+  Calls the given block for each agent in database.
+    db.each_agent {|agent|
+      p agent
+    }
+[each_profile {|profile| block}]
+  Calls the given block for each profile in database.
+    db.each_profile {|profile|
+      p profile
+    }
+  
 == Notesgrip:NotesView class
 Wrap NotesView object.
   ns = NotesGrip::NotesSession.new
@@ -72,7 +92,24 @@ Wrap NotesView object.
     }
 [[index]]
   Return the document at index.
-
+[each_entry {|entry| block}]
+  Calls the given block for each entry in the view.
+    view = db.view("All")
+    view.each_entry {|entry|
+      p entry
+    }
+[each_column {|column| block}]
+  Calls the given block for each column in the view.
+    view = db.view("All")
+    view.each_column {|entry|
+      p entry
+    }
+[UNID]
+  Alias of UniversalID().
+[count]
+[size]
+  Return count of entries of view.
+  
 === Notesgrip:NotesDocumentCollection class
 Wrap NotesDocumentCollection object.
   ns = NotesGrip::NotesSession.new
@@ -128,8 +165,6 @@ Wrap NotesItem object.
   
 = Author
 notesgrip@tech-notes.dyndns.org
-
-
 
 = License
 MIT
