@@ -160,7 +160,7 @@ module Notesgrip
     # Copy Field
     def []=(itemname, other_item)
       if @raw_object.HasItem(itemname)
-        @raw_object.RemoveItem(itemname) # 既存のデータが入った状態でCopyItemを呼ぶと、追加処理になるので
+        @raw_object.RemoveItem(itemname)
       end
       
       raw_otherItem = toRaw(other_item)

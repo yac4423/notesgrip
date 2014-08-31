@@ -94,7 +94,7 @@ module Notesgrip
       return nil unless rawDateTimeArray
       ret_list = []
       rawDateTimeArray.each {|rawDateTime|
-        # ? ‚Ç‚¤‚â‚Á‚ÄNotesDateTime‚© NotesDateRange‚©‹æ•Ê‚·‚é‚ñ‚¾?
+        # ? How to distinct between NotesDateTime and NotesDateRange?
         ret_list.push NotesDateTime.new(rawDateTime)
         raise "Not Implement"
       }
