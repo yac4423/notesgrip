@@ -139,6 +139,7 @@ Wrap NotesDocument object.
   Alias of UniversalID().
 [[itemname]]
   Return Notesgrip::NotesItem object which is identified by itemname in the document.
+  If item type is richtext, return Notesgrip::NotesRichTextItem object.
 [[itemname]=other_item]
   Copy other NotesItem with given item name.
 [each_item{|item| block}]
@@ -157,10 +158,30 @@ Wrap NotesItem object.
   Copy item_value into my field. You can set Array into the field.
 [each_value {|value| block}]
   Calls the given block for each item value in the field.
-[richitem_attached?]
-  Return true if Embeded oject in the field.
 [to_s]
   Return text string in the field.
+[EmbeddedObjects]
+  Return [], because the field type is TEXT.
+
+== Notesgrip:NotesRichTextItem class
+Wrap NotesRichTextItem object. This class is sub class of Notesgrip::NotesItem.
+  ns = NotesGrip::NotesSession.new
+  db = ns.getDatabase("servername", "dbname.nsf")
+  view = db.view("All")
+  doc = view.GetFirstDocument
+  doc["Body"].add_file("./sample.pdf")  # Body is RichText Field.
+  doc.save
+===Additional Methods
+[Values=item_value, text=item_value]
+  Copy item_value into my field. You can set Array into the field.
+[each_value {|value| block}]
+  Calls the given block for each item value in the field.
+[to_s]
+  Return text string in the field.
+[EmbeddedObjects]
+  Return array of Notesgrip::NotesEmbeddedObject in the RichText field.
+  Return [] if this field has no Embedded object.
+
 
   
 = Author
