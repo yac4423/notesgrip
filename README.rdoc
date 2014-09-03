@@ -181,7 +181,12 @@ Wrap NotesRichTextItem object. This class is sub class of Notesgrip::NotesItem.
 [EmbeddedObjects]
   Return array of Notesgrip::NotesEmbeddedObject in the RichText field.
   Return [] if this field has no Embedded object.
-
+[each_embeddedFile]
+  Calls the given block for each file type embedded object in the field.
+[each_embeddedLink]
+  Calls the given block for each link type embedded object in the field.
+[each_embeddedOLE]
+  Calls the given block for each OLE type embedded object in the field.
 
   
 = Author

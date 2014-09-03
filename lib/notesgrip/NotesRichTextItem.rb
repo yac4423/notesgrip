@@ -98,6 +98,7 @@ module Notesgrip
       @raw_object.GetFormattedText( tabstrip, lineLength )
     end
     
+    # ------ Additional Methods -----
     def [](embobj_name)
       raw_embobj = @raw_object.GetEmbeddedObject(embobj_name)
       if raw_embobj
@@ -107,8 +108,40 @@ module Notesgrip
       end
     end
     
-    def add_file(filename)
-      self.EmbedObject(EMBED_ATTACHMENT, "", filename)
+    def AddFile(filename)
+      fullname = FileSystemObject.instance.fullpath(filename)
+      self.EmbedObject(EMBED_ATTACHMENT, "", fullname)
+    end
+    alias add_file AddFile
+    
+    def each_embedded 
+      @raw_object.EmbeddedObjects.each {|rawEmbObj|
+        yield NotesEmbeddedObject.new(rawEmbObj)
+      }
+    }
+    
+    def each_embeddedFile
+      @raw_object.EmbeddedObjects.each {|rawEmbObj|
+        if rawEmbObj.Type == EMBED_ATTACHMENT
+          yield NotesEmbeddedObject.new(rawEmbObj)
+        end
+      }
+    end
+    
+    def each_embeddedLink
+      @raw_object.EmbeddedObjects.each {|rawEmbObj|
+        if rawEmbObj.Type == EMBED_OBJECTLINK
+          yield NotesEmbeddedObject.new(rawEmbObj)
+        end
+      }
+    end
+    
+    def each_embeddedOLE
+      @raw_object.EmbeddedObjects.each {|rawEmbObj|
+        if rawEmbObj.Type == EMBED_OBJECT
+          yield NotesEmbeddedObject.new(rawEmbObj)
+        end
+      }
     end
     
     def inspect

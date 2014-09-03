@@ -156,8 +156,8 @@ module Notesgrip
       NotesDocument.new(doc)
     end
     
-    def HashPassword()
-      @raw_object.HashPassword()
+    def HashPassword(password)
+      @raw_object.HashPassword(password)
     end
     
     def InitializeUsingNotesUserName( name, password )

@@ -1,0 +1,13 @@
+== 0.0.6 (2014/09/05)
+[Features:]
+  * Add methods to NotesRichTextItem class
+    * each_embeddedFile
+    * each_embeddedLink
+    * each_embeddedOLE
+  * Modified the README
+  
+[Bugfix:]
+  * Fixed NotesSession#hashPassword(). 
+
+== 0.0.5 (2014/08/31)
+Initial Release.
