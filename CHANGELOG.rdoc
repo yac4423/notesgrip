@@ -1,3 +1,7 @@
+== 0.0.7 (2014/09/05)
+[Bugfix:]
+  * Fixed Script Error. 
+
 == 0.0.6 (2014/09/05)
 [Features:]
   * Add methods to NotesRichTextItem class

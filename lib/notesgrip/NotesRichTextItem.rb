@@ -118,7 +118,7 @@ module Notesgrip
       @raw_object.EmbeddedObjects.each {|rawEmbObj|
         yield NotesEmbeddedObject.new(rawEmbObj)
       }
-    }
+    end
     
     def each_embeddedFile
       @raw_object.EmbeddedObjects.each {|rawEmbObj|
