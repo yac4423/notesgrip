@@ -101,7 +101,7 @@ module Notesgrip
       NotesRichTextParagraphStyle.new(@raw_object.CreateRichTextParagraphStyle())
     end
     
-    def CreateRichTextStyl()
+    def CreateRichTextStyle()
       NotesRichTextStyle.new(@raw_object.CreateRichTextStyl())
     end
     
@@ -198,6 +198,110 @@ module Notesgrip
       @raw_object.VerifyPassword( password, hashedPassword )
     end
     
+    # -------Simple Method Relay--------
+    def CommonUserName()
+      @raw_object.CommonUserName()
+    end
+    
+    def ConvertMime()
+      @raw_object.ConvertMime()
+    end
+    
+    def ConvertMime=(flag)
+      @raw_object.ConvertMime = flag
+    end
+    def CurrentAgent()
+      raise "Not Support"
+    end
+    
+    def DocumentContext()
+      raise "Not Support"
+    end
+    
+    def EffectiveUserName()
+      @raw_object.EffectiveUserName()
+    end
+    
+    def HttpURL()
+      @raw_object.HttpURL()
+    end
+    
+    def IsOnServer()
+      @raw_object.IsOnServer()
+    end
+    
+    def LastExitStatus()
+      @raw_object.LastExitStatus()
+    end
+    
+    def LastRun()
+      @raw_object.LastRun()
+    end
+    
+    def NotesBuildVersion()
+      @raw_object.NotesBuildVersion()
+    end
+    
+    def NotesURL()
+      @raw_object.NotesURL()
+    end
+    
+    def NotesVersion()
+      @raw_object.NotesVersion()
+    end
+    
+    def OrgDirectoryPath()
+      @raw_object.OrgDirectoryPath()
+    end
+    
+    def Platform()
+      @raw_object.Platform()
+    end
+    
+    def ServerName()
+      @raw_object.ServerName()
+    end
+    
+    def UserName()
+      @raw_object.UserName()
+    end
+    
+    def CreateDOMParser()
+      raise "Not Support"
+    end
+    
+    def CreateDxlExporter()
+      raise "Not Support"
+    end
+    
+    def CreateDxlImporter()
+      raise "Not Support"
+    end
+    
+    def CreateSAXParser()
+      raise "Not Support"
+    end
+    
+    def CreateTimer()
+      raise "Not Support"
+    end
+    
+    def CreateXSLTransformer()
+      raise "Not Support"
+    end
+    
+    def GetPropertyBroker()
+      raise "Not Support"
+    end
+    
+    def Initialize(password)
+      @raw_object.Initialize(password)
+    end
+    
+    def VerifyPassword(password, hashPassword)
+      @raw_object.VerifyPassword(password, hashPassword)
+    end
+    
     # ----Additional Methods --------
     NOTES_DATABASE = 1247
     TEMPLATE = 1248
@@ -219,7 +323,11 @@ module Notesgrip
   # ================= NotesDbDirectory Class ===============
   # ====================================================
   class NotesDbDirectory < GripWrapper
-    def nitialize(raw_doc)
+    NOTES_DATABASE = 1247
+    TEMPLATE = 1248
+    REPLICA_CANDIDATE = 1245
+    TEMPLATE_CANDIDATE = 1246 
+    def initialize(raw_doc)
       super(raw_doc)
     end
     
@@ -244,6 +352,27 @@ module Notesgrip
       NotesDatabase.new(raw_db)
     end
     
+    def OpenDatabase( dbfile, failover=false )
+      raw_db = @raw_object.OpenDatabase( dbfile, failover )
+      NotesDatabase.new(raw_db)
+    end
+    
+    def OpenDatabaseByReplicaID( repid )
+      raw_db = @raw_object.OpenDatabaseByReplicaID( repid )
+      NotesDatabase.new(raw_db)
+    end
+    
+    def OpenDatabaseIfModified( dbfile , notesDateTime )
+      raw_db = @raw_object.OpenDatabaseIfModified( dbfile , notesDateTime )
+      NotesDatabase.new(raw_db)
+    end
+    
+    def OpenMailDatabase()
+      raw_db = @raw_object.OpenMailDatabase()
+      NotesDatabase.new(raw_db)
+    end
+    
+    # ----Additional Methods --------
     def each_database(fileType=NOTES_DATABASE)
       db = GetFirstDatabase(fileType)
       while db
@@ -257,6 +386,101 @@ module Notesgrip
   # ================= NotesDateTime Class ===============
   # ====================================================
   class NotesDateTime < GripWrapper
+    # -------Simple Method Relay--------
+    def DateOnly()
+      @raw_object.DateOnly()
+    end
+    
+    def GMTTime()
+      @raw_object.GMTTime()
+    end
+    
+    def IsDST()
+      @raw_object.IsDST()
+    end
+    
+    def IsValidDate()
+      @raw_object.IsValidDate()
+    end
+    
+    def LocalTime()
+      @raw_object.LocalTime()
+    end
+    
+    def LSGMTTime()
+      @raw_object.LSGMTTime()
+    end
+    
+    def LSLocalTime()
+      @raw_object.LSLocalTime()
+    end
+    
+    def Parent()
+      NotesSession.new
+    end
+    
+    def TimeOnly()
+      @raw_object.TimeOnly()
+    end
+    
+    def TimeZone()
+      @raw_object.TimeZone()
+    end
+    
+    def ZoneTime()
+      @raw_object.ZoneTime()
+    end
+    
+    def AdjustDay()
+      @raw_object.AdjustDay()
+    end
+    
+    def AdjustHour()
+      @raw_object.AdjustHour()
+    end
+    
+    def AdjustMinute()
+      @raw_object.AdjustMinute()
+    end
+    
+    def AdjustMonth()
+      @raw_object.AdjustMonth()
+    end
+    
+    def AdjustSecond()
+      @raw_object.AdjustSecond()
+    end
+    
+    def AdjustYear()
+      @raw_object.AdjustYear()
+    end
+    
+    def ConvertToZone()
+      @raw_object.ConvertToZone()
+    end
+    
+    def SetAnyDate()
+      @raw_object.SetAnyDate()
+    end
+    
+    def SetAnyTime()
+      @raw_object.SetAnyTime()
+    end
+    
+    def SetNow()
+      @raw_object.SetNow()
+    end
+    
+    def TimeDifference(dateTime)
+      raw_datetime = toRwa(dateTime)
+      @raw_object.TimeDifference(raw_datetime)
+    end
+    
+    def TimeDifferenceDouble(dateTime)
+      raw_datetime = toRwa(dateTime)
+      @raw_object.TimeDifferenceDouble(raw_datetime)
+    end
+    
     # ---- Additional Methods -----
     def inspect
       "<#{self.class}, #{self.LocalTime} #{self.TimeOnly}>"
@@ -267,6 +491,82 @@ module Notesgrip
   # ================= NotesLog Class ===============
   # ====================================================
   class NotesLog < GripWrapper
+    # -------Simple Method Relay--------
+    def LogActions()
+      @raw_object.LogActions()
+    end
+    def LogActions=(flag)
+      @raw_object.LogActions = flag
+    end
+    
+    def LogErrors()
+      @raw_object.LogErrors()
+    end
+    def LogErrors=(flag)
+      @raw_object.LogErrors = flag
+    end
+    
+    def NumActions()
+      @raw_object.NumActions()
+    end
+    
+    def NumErrors()
+      @raw_object.NumErrors()
+    end
+    
+    def OverwriteFile()
+      @raw_object.OverwriteFile()
+    end
+    def OverwriteFile=(flag)
+      @raw_object.OverwriteFile = flag
+    end
+    
+    def Parent()
+      NotesSession.new
+    end
+    
+    def ProgramName()
+      @raw_object.ProgramName()
+    end
+    def ProgramName=(prog_name)
+      @raw_object.ProgramName = prog_name
+    end
+    
+    def Close()
+      @raw_object.Close()
+    end
+    
+    def LogAction(description)
+      @raw_object.LogAction(description)
+    end
+    
+    def LogError(code, description)
+      @raw_object.LogError(code, description)
+    end
+    
+    def LogEvent()
+      @raw_object.LogEvent()
+    end
+    
+    def New()
+      @raw_object.New()
+    end
+    
+    def OpenAgentLog()
+      @raw_object.OpenAgentLog()
+    end
+    
+    def OpenFileLog()
+      @raw_object.OpenFileLog()
+    end
+    
+    def OpenMailLog()
+      @raw_object.OpenMailLog()
+    end
+    
+    def OpenNotesLog()
+      @raw_object.OpenNotesLog()
+    end
   end
   
   # ====================================================
