@@ -15,6 +15,9 @@ Notesgrip is Ruby library to handle all Notes classes.
   }
 
 = Documentation
+In RubyDoc.Info, all Notesgrip classes are Listed.
+http://rubydoc.info/gems/notesgrip/
+
 == Notesgrip::Notes_Wrapper
 Base class of all Notesgrip classes. 
 This class wraps a various Notes objects.
