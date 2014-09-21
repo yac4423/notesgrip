@@ -198,6 +198,22 @@ module Notesgrip
       @raw_object.VerifyPassword( password, hashedPassword )
     end
     
+    
+    # ----Additional Methods --------
+    NOTES_DATABASE = 1247
+    TEMPLATE = 1248
+    REPLICA_CANDIDATE = 1245
+    TEMPLATE_CANDIDATE = 1246 
+    def each_database(serverName = "")
+      db_directory = @raw_object.GetDbDirectory( serverName )
+      raw_db = db_directory.GetFirstDatabase(NOTES_DATABASE)
+      while raw_db
+        next_db = db_directory.GetNextDatabase
+        yield NotesDatabase.new(raw_db)
+        raw_db = next_db
+      end
+    end
+    
     # -------Simple Method Relay--------
     def CommonUserName()
       @raw_object.CommonUserName()
@@ -301,22 +317,6 @@ module Notesgrip
     def VerifyPassword(password, hashPassword)
       @raw_object.VerifyPassword(password, hashPassword)
     end
-    
-    # ----Additional Methods --------
-    NOTES_DATABASE = 1247
-    TEMPLATE = 1248
-    REPLICA_CANDIDATE = 1245
-    TEMPLATE_CANDIDATE = 1246 
-    def each_database(serverName = "")
-      db_directory = @raw_object.GetDbDirectory( serverName )
-      raw_db = db_directory.GetFirstDatabase(NOTES_DATABASE)
-      while raw_db
-        next_db = db_directory.GetNextDatabase
-        yield NotesDatabase.new(raw_db)
-        raw_db = next_db
-      end
-    end
-    
   end
   
   # ====================================================

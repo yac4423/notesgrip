@@ -148,6 +148,40 @@ module Notesgrip
       val = self.Text
       "<#{self.class}, Type:#{ItemTypeDic[self.Type]}, #{self.name.inspect}=>#{val.inspect}>"
     end
+    
+    # ------ Simple Method Relay -------
+    def AddPageBreak(notesRichTextParagraphStyle=nil)
+      @raw_object.AddPageBreak(notesRichTextParagraphStyle)
+    end
+    
+    def AddTab(tab_num)
+      @raw_object.AddTab(tab_num)
+    end
+    
+    def Compact()
+      @raw_object.Compact()
+    end
+    
+    def EndInsert()
+      @raw_object.EndInsert()
+    end
+    
+    def EndSection()
+      @raw_object.EndSection()
+    end
+    
+    def GetNotesFont(faceName, addOnFail=false )
+      @raw_object.GetNotesFont(faceName, addOnFail)
+    end
+    
+    def GetUnformattedText()
+      @raw_object.GetUnformattedText()
+    end
+    
+    def Update()
+      @raw_object.Update()
+    end
+    
   end
 
   # ====================================================
@@ -179,6 +213,66 @@ module Notesgrip
     def inspect
       "<#{self.class} Type:#{TypeDic[self.Type]} Name:#{self.Name.inspect}>"
     end
+    
+    # ----- Simple Relay Methods -------
+    def Class()
+      @raw_object.Class()
+    end
+    
+    def FileSize()
+      @raw_object.FileSize()
+    end
+    
+    def FitBelowFields()
+      @raw_object.FitBelowFields()
+    end
+    def FitBelowFields=(flag)
+      @raw_object.FitBelowFields = flag
+    end
+    
+    def FitToWindow()
+      @raw_object.FitToWindow()
+    end
+    def FitToWindow=(flag)
+      @raw_object.FitToWindow = flag
+    end
+    
+    def Name()
+      @raw_object.Name()
+    end
+    
+    def Object()
+      @raw_object.Object()
+    end
+    
+    def RunReadOnly()
+      @raw_object.RunReadOnly()
+    end
+    
+    def RunReadOnly=(flag)
+      @raw_object.RunReadOnly = flag
+    end
+    
+    def Source()
+      @raw_object.Source()
+    end
+    
+    def Type()
+      @raw_object.Type()
+    end
+    
+    def Verbs()
+      @raw_object.Verbs()
+    end
+    
+    def Activate(show=false)
+      @raw_object.Activate(show)
+    end
+    
+    def DoVerb(verb)
+      @raw_object.DoVerb(verb)
+    end
+    
   end
 
   # ====================================================

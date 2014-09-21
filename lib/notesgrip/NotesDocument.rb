@@ -44,6 +44,11 @@ module Notesgrip
       NotesDocumentCollection.new(raw_docCollection)
     end
     
+    def UniversalID()
+      @raw_object.UniversalID()
+    end
+    alias unid UniversalID
+    
     def AppendItemValue( itemName, value )
       raw_item = @raw_object.AppendItemValue( itemName, value )
       NotesItem.new(raw_item)
@@ -139,9 +144,6 @@ module Notesgrip
     end
     
     # ---- Additional Methods ------
-    def unid
-      @raw_object.UniversalID
-    end
     
     def [](itemname)
       if @raw_object.HasItem(itemname)
@@ -182,6 +184,233 @@ module Notesgrip
       "<#{self.class}, Form:#{self['Form'].text.inspect}>"
     end
     
+    # ----- Simple Method Relay ----
+    def Authors()
+      @raw_object.Authors()
+    end
+    
+    def ColumnValues()
+      @raw_object.ColumnValues()
+    end
+    
+    def Created()
+      @raw_object.Created()
+    end
+    
+    def EncryptionKeys()
+      @raw_object.EncryptionKeys()
+    end
+    def EncryptionKeys=(stringArray)
+      @raw_object.EncryptionKeys = stringArray
+    end
+    
+    def EncryptOnSend()
+      @raw_object.EncryptOnSend()
+    end
+    def EncryptOnSend=(flag)
+      @raw_object.EncryptOnSend = flag
+    end
+    
+    def FolderReferences()
+      @raw_object.FolderReferences()
+    end
+    
+    def FTSearchScore()
+      @raw_object.FTSearchScore()
+    end
+    
+    def HasEmbedded()
+      @raw_object.HasEmbedded()
+    end
+    
+    def HttpURL()
+      @raw_object.HttpURL()
+    end
+    
+    def IsDeleted()
+      @raw_object.IsDeleted()
+    end
+    
+    def IsEncrypted()
+      @raw_object.IsEncrypted()
+    end
+    
+    def IsNewNote()
+      @raw_object.IsNewNote()
+    end
+    
+    def IsProfile()
+      @raw_object.IsProfile()
+    end
+    
+    def IsResponse()
+      @raw_object.IsResponse()
+    end
+    
+    def IsSigned()
+      @raw_object.IsSigned()
+    end
+    
+    def IsUIDocOpen()
+      @raw_object.IsUIDocOpen()
+    end
+    
+    def IsValid()
+      @raw_object.IsValid()
+    end
+    
+    def Key()
+      @raw_object.Key()
+    end
+    
+    def LastAccessed()
+      @raw_object.LastAccessed()
+    end
+    
+    def LastModified()
+      @raw_object.LastModified()
+    end
+    
+    def LockHolders()
+      @raw_object.LockHolders()
+    end
+    
+    def NameOfProfile()
+      @raw_object.NameOfProfile()
+    end
+    
+    def NoteID()
+      @raw_object.NoteID()
+    end
+    
+    def NotesURL()
+      @raw_object.NotesURL()
+    end
+    
+    def ParentDocumentUNID()
+      @raw_object.ParentDocumentUNID()
+    end
+    
+    def SaveMessageOnSend()
+      @raw_object.SaveMessageOnSend()
+    end
+    def SaveMessageOnSend=(flag)
+      @raw_object.SaveMessageOnSend = flag
+    end
+    
+    def SentByAgent()
+      @raw_object.SentByAgent()
+    end
+    
+    def Signer()
+      @raw_object.Signer()
+    end
+    
+    def SignOnSend()
+      @raw_object.SignOnSend()
+    end
+    def SignOnSend=(flag)
+      @raw_object.SignOnSend = flag
+    end
+    
+    def Size()
+      @raw_object.Size()
+    end
+    
+    def Verifier()
+      @raw_object.Verifier()
+    end
+    
+    def CloseMIMEEntities(savechanges=false, entityitemname="Body")
+      @raw_object.CloseMIMEEntities(savechanges, entityitemname)
+    end
+    
+    def ComputeWithForm(doDataTypes=true, raiseError=false)
+      @raw_object.ComputeWithForm(doDataTypes, raiseError)
+    end
+    
+    CONVERT_RT_TO_HTML = 2 
+    CONVERT_RT_TO_PLAINTEXT = 1
+    CONVERT_RT_TO_PLAINTEXT_AND_HTML = 3
+    def ConvertToMIME(conversionType=CONVERT_RT_TO_PLAINTEXT_AND_HTML, options=nil)
+      @raw_object.ConvertToMIME(conversionType, options)
+    end
+    
+    def Encrypt()
+      @raw_object.Encrypt()
+    end
+    
+    def GetRead(username=nil)
+      @raw_object.GetRead(username)
+    end
+    
+    def GetReceivedItemText()
+      @raw_object.GetReceivedItemText()
+    end
+    
+    def HasItem(itemName)
+      @raw_object.HasItem(itemName)
+    end
+    
+    # IsDocumentLockingEnabled must be true
+    def Lock( name=nil, provisionalOK=false )
+      @raw_object.Lock(name, provisionalOK)
+    end
+    
+    def LockProvisional(name=nil)
+      @raw_object.LockProvisional(name)
+    end
+    
+    def MarkRead(username=nil)
+      @raw_object.MarkRead(username)
+    end
+    
+    def MarkUnread(username=nil)
+      @raw_object.MarkUnread(username)
+    end
+    
+    def PutInFolder(folderName, createonfail=true )
+      @raw_object.PutInFolder(folderName, createonfail)
+    end
+    
+    def Remove(force=true)
+      result = @raw_object.Remove(force)
+      @raw_object = nil if result
+    end
+    
+    def RemoveFromFolder( folderName)
+      @raw_object.RemoveFromFolder( folderName)
+    end
+    
+    def RemoveItem(itemName)
+      @raw_object.RemoveItem(itemName)
+    end
+    
+    def RemovePermanently(force=true)
+      result = @raw_object.RemovePermanently(force)
+      @raw_object = nil if result
+    end
+    
+    def Save( force=true, createResponse=false, markRead=false )
+      if force
+        @raw_object.Save(force, false, markRead)
+      else
+        @raw_object.Save(force, createResponse, markRead)
+      end
+    end
+    
+    def Send(attachForm=false, recipients=nil)
+      @raw_object.Send(attachForm, recipients)
+    end
+    
+    def Sign()
+      @raw_object.Sign()
+    end
+    
+    # IsDocumentLockingEnabled must be true
+    def UnLock()
+      @raw_object.UnLock()
+    end
   end
 
   # ====================================================
@@ -252,6 +481,47 @@ module Notesgrip
     # ---- Additional Methods ------
     def inspect
       "<#{self.class}, Count:#{self.Count}>"
+    end
+    
+    # ---- Simple Method Relay ----
+    def IsSorted()
+      @raw_object.IsSorted()
+    end
+    
+    def Query()
+      @raw_object.Query()
+    end
+    
+    def UntilTime()
+      @raw_object.UntilTime()
+    end
+    
+    def MarkAllRead(username=nil)
+      @raw_object.MarkAllRead(username)
+    end
+    
+    def MarkAllUnread(username=nil)
+      @raw_object.MarkAllUnread(username)
+    end
+    
+    def PutAllInFolder(folderName, createonfail=true)
+      @raw_object.PutAllInFolder(folderName, createonfail)
+    end
+    
+    def RemoveAll(force=true)
+      @raw_object.RemoveAll(force)
+    end
+    
+    def RemoveAllFromFolder(folderName)
+      @raw_object.RemoveAllFromFolder(folderName)
+    end
+    
+    def StampAll(itemname, value)
+      @raw_object.StampAll()
+    end
+    
+    def UpdateAll()
+      @raw_object.UpdateAll()
     end
   end
 

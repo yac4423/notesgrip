@@ -168,5 +168,90 @@ module Notesgrip
       @raw_object = parent_doc.CopyItem(other_item, self.Name)
     end
     
+    # ---------- Simple Relay Methods ---------
+    def IsAuthors()
+      @raw_object.IsAuthors()
+    end
+    
+    def IsEncrypted()
+      @raw_object.IsEncrypted()
+    end
+    
+    # Need to call NotesDocument#Encrypt() to encrypt NotesItem
+    def IsEncrypted=(flag)
+      @raw_object.IsEncrypted = flag
+    end
+    
+    def IsNames()
+      @raw_object.IsNames()
+    end
+    
+    def IsNames=(flag)
+      @raw_object.IsNames = flag
+    end
+    
+    def IsProtected()
+      @raw_object.IsProtected()
+    end
+    
+    def IsProtected=(flag)
+      @raw_object.IsProtected = flag
+    end
+    
+    def IsReaders()
+      @raw_object.IsReaders()
+    end
+    
+    def IsReaders=(flag)
+      @raw_object.IsReaders = flag
+    end
+    
+    def IsSigned()
+      @raw_object.IsSigned()
+    end
+    
+    def IsSigned=(flag)
+      @raw_object.IsSigned = flag
+    end
+    
+    def IsSummary()
+      @raw_object.IsSummary()
+    end
+    
+    def IsSummary=(flag)
+      @raw_object.IsSummary = flag
+    end
+    
+    def LastModified()
+      @raw_object.LastModified()
+    end
+    
+    def Name()
+      @raw_object.Name()
+    end
+    
+    def SaveToDisk()
+      @raw_object.SaveToDisk()
+    end
+    
+    def SaveToDisk=(flag)
+      @raw_object.SaveToDisk = flag
+    end
+    
+    def Abstract(maxAbstract=1024, dropVowels=false, useDictionary=false)
+      @raw_object.Abstract(maxAbstract, dropVowels, useDictionary)
+    end
+    
+    def Contains(value)
+      @raw_object.Contains(value)
+    end
+    
+    def GetValueCustomDataBytes(dataTypeName)
+      @raw_object.GetValueCustomDataBytes(dataTypeName)
+    end
+    
+    def SetValueCustomDataBytes(dataTypeName, byteArray)
+      @raw_object.SetValueCustomDataBytes(dataTypeName, byteArray)
+    end
   end
 end

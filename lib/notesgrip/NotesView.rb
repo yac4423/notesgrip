@@ -67,6 +67,12 @@ module Notesgrip
       raw_viewNavigator ? NotesViewNavigator.new(raw_viewNavigator) : nil
     end
     
+    def CreateViewNavFromChildren(navigatorObject, cacheSize=128 )
+      raw_navigatorObject = toRaw(navigatorObject)
+      raw_viewNavigator = @raw_object.CreateViewNavFromChildren(raw_navigatorObject, cacheSize)
+      raw_viewNavigator ? NotesViewNavigator.new(raw_viewNavigator) : nil
+    end
+    
     def CreateViewNavFromDescendants( navigatorObject, cacheSize=128 )
       raw_obj = toRaw(navigatorObject)
       raw_viewNavigator = @raw_object.CreateViewNavFromDescendants( raw_obj, cacheSize )
@@ -192,6 +198,198 @@ module Notesgrip
     def inspect
       "<#{self.class}, Name:#{self.Name.inspect}>"
     end
+    
+    # -------Simple Method Relay--------
+    def Aliases()
+      @raw_object.Aliases()
+    end
+    def Aliases=( aliases)
+      @raw_object.Aliases =  aliases
+    end
+    
+    def AutoUpdate()
+      @raw_object.AutoUpdate()
+    end
+    def AutoUpdate=(flag)
+      @raw_object.AutoUpdate = flag
+    end
+    
+    def BackgroundColor()
+      @raw_object.BackgroundColor()
+    end
+    def BackgroundColor=(color)
+      @raw_object.BackgroundColor = color
+    end
+    
+    def ColumnCount()
+      @raw_object.ColumnCount()
+    end
+    
+    def Created()
+      @raw_object.Created()
+    end
+    
+    def EntryCount()
+      @raw_object.EntryCount()
+    end
+    
+    def HeaderLines()
+      @raw_object.HeaderLines()
+    end
+    
+    def HttpURL()
+      @raw_object.HttpURL()
+    end
+    
+    def IsCalendar()
+      @raw_object.IsCalendar()
+    end
+    
+    def IsCategorized()
+      @raw_object.IsCategorized()
+    end
+    
+    def IsConflict()
+      @raw_object.IsConflict()
+    end
+    
+    def IsDefaultView()
+      @raw_object.IsDefaultView()
+    end
+    def IsDefaultView=(flag)
+      @raw_object.IsDefaultView = flag
+    end
+    
+    def IsFolder()
+      @raw_object.IsFolder()
+    end
+    
+    def IsHierarchical()
+      @raw_object.IsHierarchical()
+    end
+    
+    def IsModified()
+      @raw_object.IsModified()
+    end
+    
+    def IsPrivate()
+      @raw_object.IsPrivate()
+    end
+    
+    def IsProhibitDesignRefresh()
+      @raw_object.IsProhibitDesignRefresh()
+    end
+    def IsProhibitDesignRefresh=(flag)
+      @raw_object.IsProhibitDesignRefresh = flag
+    end
+    
+    def LastModified()
+      @raw_object.LastModified()
+    end
+    
+    def LockHolders()
+      @raw_object.LockHolders()
+    end
+    
+    def Name()
+      @raw_object.Name()
+    end
+    
+    def NotesURL()
+      @raw_object.NotesURL()
+    end
+    
+    def ProtectReaders()
+      @raw_object.ProtectReaders()
+    end
+    
+    def Readers()
+      @raw_object.Readers()
+    end
+    def Readers=(stringArray)
+      @raw_object.Readers = stringArray
+    end
+    
+    def RowLines()
+      @raw_object.RowLines()
+    end
+    
+    def SelectionFormula()
+      @raw_object.SelectionFormula()
+    end
+    def SelectionFormula=(formula)
+      @raw_object.SelectionFormula = formula
+    end
+    
+    VW_SPACING_SINGLE = 0
+    VW_SPACING_ONE_POINT_25 = 1
+    VW_SPACING_ONE_POINT_50 = 2
+    VW_SPACING_ONE_POINT_75 = 3
+    VW_SPACING_DOUBLE = 4
+    def Spacing()
+      @raw_object.Spacing()
+    end
+    
+    def Spacing=(spacing)
+      @raw_object.Spacing = spacing
+    end
+    
+    def TopLevelEntryCount()
+      @raw_object.TopLevelEntryCount()
+    end
+    
+    def ViewInheritedName()
+      @raw_object.ViewInheritedName()
+    end
+    
+    def Clear()
+      @raw_object.Clear()
+    end
+    
+    # NotesDatabase#IsDesignLockingEnabled must be True before use this method.
+    def Lock(name, provisionalOK=false)
+      @raw_object.Lock(name, provisionalOK)
+    end
+    
+    # NotesDatabase#IsDesignLockingEnabled must be True before use this method.
+    def LockProvisional(name)
+      @raw_object.LockProvisional(name)
+    end
+    
+    def MarkAllRead(username=nil)
+      @raw_object.MarkAllRead(username)
+    end
+    
+    def MarkAllUnread(username=nil)
+      @raw_object.MarkAllUnread(username)
+    end
+    
+    def Refresh()
+      @raw_object.Refresh()
+    end
+    
+    def Remove()
+      @raw_object.Remove()
+      @raw_object = nil
+    end
+    
+    def ResortView(columnName=nil, ascendingFlag=true)
+      @raw_object.ResortView(columnName, ascendingFlag)
+    end
+    
+    def RemoveColumn(columnNameOrIndex=nil)
+      @raw_object.RemoveColumn(columnNameOrIndex)
+    end
+    
+    def SetAliases(aliases)
+      @raw_object.SetAliases(aliases)
+    end
+    
+    # NotesDatabase#IsDesignLockingEnabled must be True before use this method.
+    def UnLock()
+      @raw_object.UnLock()
+    end
+    
   end
 
   # ====================================================
