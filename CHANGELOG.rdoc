@@ -1,3 +1,14 @@
+== 0.0.8 (2014/09/21)
+[Features:]
+  * Define all methods of classes the following.
+    * NotesSession
+    * NotesDatabase
+    * NotesDocument
+    * NotesView
+    * NotesItem
+    * NotesRichtextItem
+    * NotesEmbeddedObject
+
 == 0.0.7 (2014/09/05)
 [Bugfix:]
   * Fixed Script Error. 
